@@ -1,0 +1,60 @@
+Ubuntu (x86_64,8GB)
+===================
+
+kodidev:~/dnsmasq$ gcc -Wall -Werror -o oom_alloc oom_alloc.c
+
+kodidev:~/dnsmasq$ ./oom_alloc --private
+Test dnsmasq OOM: memory allocation and forking
+(allocate 64 MB private anonymous, fork 16 processes)
+Committed_AS:    3201268 kB    (initial state)
+Committed_AS:    3263560 kB    (parent mem allocated)
+Committed_AS:    3263560 kB    (parent mem initialized)
+Committed_AS:    3263560 kB    (parent mem set-readonly)
+Committed_AS:    4317256 kB    (parent forked children)
+Committed_AS:    3264192 kB    (parent reaped children)
+Committed_AS:    3198656 kB    (parent mem unmapped)
+
+kodidev:~/dnsmasq$ ./oom_alloc --shared
+Test dnsmasq OOM: memory allocation and forking
+(allocate 64 MB shared anonymous, fork 16 processes)
+Committed_AS:    3198328 kB    (initial state)
+Committed_AS:    3264192 kB    (parent mem allocated)
+Committed_AS:    3264192 kB    (parent mem initialized)
+Committed_AS:    3264192 kB    (parent mem set-readonly)
+Committed_AS:    3268176 kB    (parent forked children)
+Committed_AS:    3268176 kB    (parent reaped children)
+Committed_AS:    3201976 kB    (parent mem unmapped)
+
+
+
+OpenWrt on QEMU/malta (mips32be,128MB)
+======================================
+
+root@OpenWrt:/# head -1 /proc/meminfo
+MemTotal:         118164 kB
+
+root@OpenWrt:~# ./oom_alloc
+./oom_alloc [ --shared | --private ]
+
+root@OpenWrt:~# ./oom_alloc --shared
+Test dnsmasq OOM: memory allocation and forking
+(allocate 64 MB shared anonymous, fork 16 processes)
+Committed_AS:      27560 kB    (initial state)
+Committed_AS:      93096 kB    (parent mem allocated)
+Committed_AS:      93096 kB    (parent mem initialized)
+Committed_AS:      93096 kB    (parent mem set-readonly)
+Committed_AS:      95656 kB    (parent forked children)
+Committed_AS:      93096 kB    (parent reaped children)
+Committed_AS:      27560 kB    (parent mem unmapped)
+
+root@OpenWrt:~# ./oom_alloc --private
+Test dnsmasq OOM: memory allocation and forking
+(allocate 64 MB private anonymous, fork 16 processes)
+Committed_AS:      27560 kB    (initial state)
+Committed_AS:      93096 kB    (parent mem allocated)
+Committed_AS:      93096 kB    (parent mem initialized)
+Committed_AS:      93096 kB    (parent mem set-readonly)
+Committed_AS:    1144232 kB    (parent forked children)
+[  349.999670] askfirst invoked oom-killer: gfp_mask=0x100cca(GFP_HIGHUSER_MOVABLE), order=0, oom_score_adj=0
+[  350.003034] CPU: 0 PID: 3113 Comm: askfirst Not tainted 5.10.28 #0
+[  350.003781] Stack : 80865ca0 00000000 00100cca 8017e750 80b00000 80866a08 00000000 00000000
